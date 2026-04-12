@@ -11,68 +11,73 @@ import { RequestsPage } from "../pages/RequestsPage";
 import { SettingsPage } from "../pages/SettingsPage";
 import { VendorsPage } from "../pages/VendorsPage";
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <AppLayout />,
+      children: [
+        {
+          index: true,
+          element: <Navigate replace to="/dashboard" />,
+        },
+        {
+          path: "dashboard",
+          element: <DashboardPage />,
+          handle: { title: "Dashboard" },
+        },
+        {
+          path: "assets",
+          element: <AssetsPage />,
+          handle: { title: "Assets" },
+        },
+        {
+          path: "assets/:id",
+          element: <AssetDetailPage />,
+          handle: { title: "Asset Detail" },
+        },
+        {
+          path: "employees",
+          element: <EmployeesPage />,
+          handle: { title: "Employees" },
+        },
+        {
+          path: "assignments",
+          element: <AssignmentsPage />,
+          handle: { title: "Assignments" },
+        },
+        {
+          path: "maintenance",
+          element: <MaintenancePage />,
+          handle: { title: "Maintenance" },
+        },
+        {
+          path: "requests",
+          element: <RequestsPage />,
+          handle: { title: "Requests" },
+        },
+        {
+          path: "vendors",
+          element: <VendorsPage />,
+          handle: { title: "Vendors" },
+        },
+        {
+          path: "reports",
+          element: <ReportsPage />,
+          handle: { title: "Reports" },
+        },
+        {
+          path: "settings",
+          element: <SettingsPage />,
+          handle: { title: "Settings" },
+        },
+      ],
+    },
+  ],
   {
-    path: "/",
-    element: <AppLayout />,
-    children: [
-      {
-        index: true,
-        element: <Navigate replace to="/dashboard" />,
-      },
-      {
-        path: "dashboard",
-        element: <DashboardPage />,
-        handle: { title: "Dashboard" },
-      },
-      {
-        path: "assets",
-        element: <AssetsPage />,
-        handle: { title: "Assets" },
-      },
-      {
-        path: "assets/:id",
-        element: <AssetDetailPage />,
-        handle: { title: "Asset Detail" },
-      },
-      {
-        path: "employees",
-        element: <EmployeesPage />,
-        handle: { title: "Employees" },
-      },
-      {
-        path: "assignments",
-        element: <AssignmentsPage />,
-        handle: { title: "Assignments" },
-      },
-      {
-        path: "maintenance",
-        element: <MaintenancePage />,
-        handle: { title: "Maintenance" },
-      },
-      {
-        path: "requests",
-        element: <RequestsPage />,
-        handle: { title: "Requests" },
-      },
-      {
-        path: "vendors",
-        element: <VendorsPage />,
-        handle: { title: "Vendors" },
-      },
-      {
-        path: "reports",
-        element: <ReportsPage />,
-        handle: { title: "Reports" },
-      },
-      {
-        path: "settings",
-        element: <SettingsPage />,
-        handle: { title: "Settings" },
-      },
-    ],
+    basename: import.meta.env.BASE_URL,
   },
-]);
+);
 
 export function AppRouter() {
   return <RouterProvider router={router} />;
