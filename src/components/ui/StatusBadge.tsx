@@ -24,7 +24,9 @@ export type StatusBadgeValue =
   | "Retired"
   | "Open"
   | "In Review"
+  | "Approved"
   | "Resolved"
+  | "Rejected"
   | "Due Soon"
   | "Overdue"
   | "Pending"
@@ -46,7 +48,9 @@ const badgeStyles: Record<StatusBadgeValue, string> = {
   Retired: "bg-slate-100 text-slate-700 ring-slate-500/20",
   Open: "bg-blue-50 text-blue-700 ring-blue-600/20",
   "In Review": "bg-violet-50 text-violet-700 ring-violet-600/20",
+  Approved: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
   Resolved: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
+  Rejected: "bg-rose-50 text-rose-700 ring-rose-600/20",
   "Due Soon": "bg-amber-50 text-amber-700 ring-amber-600/20",
   Overdue: "bg-rose-50 text-rose-700 ring-rose-600/20",
   Pending: "bg-slate-100 text-slate-700 ring-slate-500/20",
@@ -58,7 +62,6 @@ const badgeStyles: Record<StatusBadgeValue, string> = {
   Low: "bg-slate-100 text-slate-700 ring-slate-500/20",
   "On Leave": "bg-amber-50 text-amber-700 ring-amber-600/20",
   Inactive: "bg-slate-100 text-slate-700 ring-slate-500/20",
-  Approved: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
   Closed: "bg-slate-100 text-slate-700 ring-slate-500/20",
   Queued: "bg-slate-100 text-slate-700 ring-slate-500/20",
   "In Progress": "bg-amber-50 text-amber-700 ring-amber-600/20",

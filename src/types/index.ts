@@ -8,7 +8,13 @@ export type EmployeeStatus = "Active" | "On Leave" | "Inactive";
 
 export type RequestPriority = "Low" | "Medium" | "High";
 
-export type RequestStatus = "Open" | "In Review" | "Approved" | "Closed";
+export type RequestStatus =
+  | "Open"
+  | "In Review"
+  | "Approved"
+  | "Resolved"
+  | "Rejected"
+  | "Closed";
 
 export type RepairStatus = "Queued" | "In Progress" | "Awaiting Parts" | "Completed";
 
