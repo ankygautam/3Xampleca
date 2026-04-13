@@ -92,7 +92,7 @@ npm run preview
 ### GitHub Pages
 
 - The app uses a hash router, which avoids client-side refresh issues on static hosting
-- The default Vite base path is configured for the `3Xampleca` GitHub Pages deployment
+- The default Vite base path is relative, so the same production build works for both the repo URL and a custom domain
 - The expected GitHub Pages URL is:
 
 ```text
@@ -102,7 +102,8 @@ https://ankygautam.github.io/3Xampleca/
 ### Vercel
 
 - The current app does not require environment variables
-- For a root-path Vercel deployment, set:
+- The default build already works at the root path on Vercel
+- If you ever need to force a specific base path, set:
 
 ```text
 VITE_BASE_PATH=/
