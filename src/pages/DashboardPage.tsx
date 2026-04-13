@@ -5,195 +5,182 @@ import {
   UserCheck,
   Wrench,
 } from "lucide-react";
+import { Link } from "react-router-dom";
+import {
+  assets,
+  assignmentHistory,
+  assignments,
+  maintenanceHistory,
+  maintenanceRecords,
+  serviceRequests,
+  warrantyItems,
+} from "../data/mockData";
+import { BarChartCard } from "../components/charts/BarChartCard";
+import { DonutChartCard } from "../components/charts/DonutChartCard";
+import { TrendChartCard } from "../components/charts/TrendChartCard";
 import { PageSection } from "../components/ui/PageSection";
 import { StatCard } from "../components/ui/StatCard";
 import { StatusBadge } from "../components/ui/StatusBadge";
-
-interface AssignmentRow {
-  assetTag: string;
-  device: string;
-  assignedTo: string;
-  department: string;
-  date: string;
-  status: "Active" | "Returned";
-}
-
-interface MaintenanceAlert {
-  assetTag: string;
-  issue: string;
-  vendor: string;
-  repairStatus: "Queued" | "In Progress" | "Awaiting Parts";
-  eta: string;
-}
-
-interface WarrantyItem {
-  assetTag: string;
-  model: string;
-  assignedUser: string;
-  warrantyExpiry: string;
-}
-
-interface RequestItem {
-  type: string;
-  requester: string;
-  priority: "Low" | "Medium" | "High";
-  status: "Open" | "In Review" | "Resolved";
-}
+import type { WarrantyItem } from "../types";
 
 const summaryCards = [
   {
     title: "Total Assets",
-    value: "1,284",
     subtitle: "Tracked across all offices",
-    helperText: "Includes active, spare, and retired inventory",
+    helperText: "Includes assigned, spare, maintenance, and retired inventory",
     icon: Boxes,
   },
   {
     title: "Assigned Assets",
-    value: "1,006",
-    subtitle: "Currently in use",
-    helperText: "Issued to employees and shared teams",
+    subtitle: "Currently in employee use",
+    helperText: "Active devices allocated to staff and team pools",
     icon: UserCheck,
   },
   {
     title: "Available Assets",
-    value: "214",
     subtitle: "Ready for deployment",
-    helperText: "Provisioned stock in warehouse and regional cabinets",
+    helperText: "Provisioned stock available for onboarding and replacement",
     icon: HardDrive,
   },
   {
     title: "Under Maintenance",
-    value: "48",
-    subtitle: "Being repaired",
-    helperText: "Vendor turnaround monitored weekly",
+    subtitle: "In active service flow",
+    helperText: "Devices waiting on repair, service, or vendor updates",
     icon: Wrench,
   },
   {
     title: "Retired Assets",
-    value: "16",
-    subtitle: "Archived this quarter",
-    helperText: "Removed from active assignment pool",
+    subtitle: "Removed from active inventory",
+    helperText: "Archived records retained for audit and lifecycle tracking",
     icon: ShieldAlert,
   },
 ] as const;
 
-const recentAssignments: AssignmentRow[] = [
-  {
-    assetTag: "LTP-2048",
-    device: "Dell Latitude 7440",
-    assignedTo: "Anika Sharma",
-    department: "Finance",
-    date: "Apr 11, 2026",
-    status: "Active",
-  },
-  {
-    assetTag: "PHN-1184",
-    device: "Apple iPhone 15",
-    assignedTo: "Mason Lee",
-    department: "Operations",
-    date: "Apr 10, 2026",
-    status: "Active",
-  },
-  {
-    assetTag: "MON-3388",
-    device: "Dell UltraSharp 32",
-    assignedTo: "Jordan Patel",
-    department: "Legal",
-    date: "Apr 9, 2026",
-    status: "Active",
-  },
-  {
-    assetTag: "TAB-4403",
-    device: "Surface Pro 10",
-    assignedTo: "Sofia Martinez",
-    department: "People",
-    date: "Apr 8, 2026",
-    status: "Returned",
-  },
-];
+const chartPalette = ["#0f172a", "#334155", "#64748b", "#94a3b8", "#cbd5e1"];
 
-const maintenanceAlerts: MaintenanceAlert[] = [
-  {
-    assetTag: "LTP-1931",
-    issue: "Battery swelling and keyboard replacement",
-    vendor: "NorthBridge IT Services",
-    repairStatus: "In Progress",
-    eta: "Apr 18, 2026",
-  },
-  {
-    assetTag: "DOC-7811",
-    issue: "Print quality degradation",
-    vendor: "ScreenWorks Supply",
-    repairStatus: "Queued",
-    eta: "Apr 16, 2026",
-  },
-  {
-    assetTag: "PHN-0971",
-    issue: "Display flicker after update",
-    vendor: "MobileCare Support",
-    repairStatus: "Awaiting Parts",
-    eta: "Apr 22, 2026",
-  },
-];
+const monthFormatter = new Intl.DateTimeFormat("en-US", { month: "short" });
 
-const warrantyExpiringSoon: WarrantyItem[] = [
-  {
-    assetTag: "LTP-1931",
-    model: "Lenovo ThinkPad T14",
-    assignedUser: "IT Support Pool",
-    warrantyExpiry: "Jun 18, 2026",
-  },
-  {
-    assetTag: "PRF-2207",
-    model: "Logitech MX Keys Combo",
-    assignedUser: "Sofia Martinez",
-    warrantyExpiry: "Aug 3, 2026",
-  },
-  {
-    assetTag: "PHN-1184",
-    model: "Apple iPhone 15",
-    assignedUser: "Mason Lee",
-    warrantyExpiry: "Nov 22, 2026",
-  },
-];
+function getMonthLabel(dateValue: string) {
+  const parsed = new Date(dateValue);
+  if (Number.isNaN(parsed.getTime())) {
+    return dateValue;
+  }
 
-const recentRequests: RequestItem[] = [
-  {
-    type: "Replacement request",
-    requester: "Anika Sharma",
-    priority: "High",
-    status: "In Review",
-  },
-  {
-    type: "New device request",
-    requester: "Jordan Patel",
-    priority: "Medium",
-    status: "Open",
-  },
-  {
-    type: "Issue report",
-    requester: "Mason Lee",
-    priority: "Medium",
-    status: "Resolved",
-  },
-  {
-    type: "Accessory request",
-    requester: "Sofia Martinez",
-    priority: "Low",
-    status: "Open",
-  },
-];
+  return monthFormatter.format(parsed);
+}
 
 export function DashboardPage() {
+  const totalAssets = assets.length;
+  const assignedAssets = assets.filter((asset) => asset.status === "Assigned").length;
+  const availableAssets = assets.filter((asset) => asset.status === "Available").length;
+  const maintenanceAssets = assets.filter((asset) => asset.status === "Maintenance").length;
+  const retiredAssets = assets.filter((asset) => asset.status === "Retired").length;
+
+  const summaryValues = {
+    "Total Assets": totalAssets,
+    "Assigned Assets": assignedAssets,
+    "Available Assets": availableAssets,
+    "Under Maintenance": maintenanceAssets,
+    "Retired Assets": retiredAssets,
+  };
+
+  const assetDistributionData = Array.from(
+    assets.reduce((map, asset) => {
+      map.set(asset.type, (map.get(asset.type) ?? 0) + 1);
+      return map;
+    }, new Map<string, number>()),
+  )
+    .map(([name, value], index) => ({
+      name,
+      value,
+      color: chartPalette[index % chartPalette.length],
+    }))
+    .sort((first, second) => second.value - first.value);
+
+  const assignmentActivityTrend = Array.from(
+    [...assignmentHistory, ...assignments].reduce((map, assignment) => {
+      const month = getMonthLabel(assignment.assignedDate);
+      map.set(month, (map.get(month) ?? 0) + 1);
+      return map;
+    }, new Map<string, number>()),
+  )
+    .map(([label, value]) => ({ label, value }))
+    .slice(-6);
+
+  const maintenanceStatusOverview = [
+    {
+      label: "Open",
+      value: [...maintenanceRecords, ...maintenanceHistory].filter(
+        (item) => item.status === "Open",
+      ).length,
+      color: "#0f172a",
+    },
+    {
+      label: "Awaiting Parts",
+      value: [...maintenanceRecords, ...maintenanceHistory].filter(
+        (item) => item.status === "Awaiting Parts",
+      ).length,
+      color: "#334155",
+    },
+    {
+      label: "In Repair",
+      value: [...maintenanceRecords, ...maintenanceHistory].filter(
+        (item) => item.status === "In Repair",
+      ).length,
+      color: "#64748b",
+    },
+    {
+      label: "Returned",
+      value: [...maintenanceRecords, ...maintenanceHistory].filter(
+        (item) => item.status === "Returned",
+      ).length,
+      color: "#94a3b8",
+    },
+    {
+      label: "Escalated",
+      value: [...maintenanceRecords, ...maintenanceHistory].filter(
+        (item) => item.status === "Escalated",
+      ).length,
+      color: "#cbd5e1",
+    },
+  ];
+
+  const recentAssignments = [...assignments]
+    .sort(
+      (first, second) =>
+        new Date(second.assignedDate).getTime() - new Date(first.assignedDate).getTime(),
+    )
+    .slice(0, 5);
+
+  const maintenanceAlerts = [...maintenanceRecords]
+    .sort(
+      (first, second) =>
+        new Date(second.submittedDate).getTime() - new Date(first.submittedDate).getTime(),
+    )
+    .slice(0, 4);
+
+  const expiringWarrantyItems = [...warrantyItems]
+    .sort(
+      (first, second) =>
+        new Date(first.expiryDate).getTime() - new Date(second.expiryDate).getTime(),
+    )
+    .slice(0, 4);
+
+  const recentRequests = [...serviceRequests]
+    .sort(
+      (first, second) =>
+        new Date(second.submittedDate).getTime() - new Date(first.submittedDate).getTime(),
+    )
+    .slice(0, 4);
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold tracking-tight text-slate-950">
+    <div className="page-stack">
+      <div className="page-copy">
+        <h2 className="page-title">
           Asset operations overview
         </h2>
-        <p className="mt-1 text-sm text-slate-500">
-          Summary of inventory status, assignments, repairs, and incoming requests.
+        <p className="page-subtitle">
+          Inventory, assignment activity, service workload, and request intake in one view.
         </p>
       </div>
 
@@ -202,7 +189,7 @@ export function DashboardPage() {
           <StatCard
             key={card.title}
             title={card.title}
-            value={card.value}
+            value={String(summaryValues[card.title])}
             subtitle={card.subtitle}
             helperText={card.helperText}
             icon={card.icon}
@@ -210,32 +197,69 @@ export function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+      <div className="grid gap-6 xl:grid-cols-3">
+        <DonutChartCard
+          title="Asset Distribution"
+          subtitle="Current inventory split across major device categories"
+          data={assetDistributionData}
+          dataKey="value"
+          nameKey="name"
+          colorKey="color"
+          centerLabel="Managed assets"
+        />
+
+        <TrendChartCard
+          title="Assignment Activity Trend"
+          subtitle="Recent monthly assignment movement across current records"
+          data={assignmentActivityTrend}
+          dataKey="value"
+          xAxisKey="label"
+          valueLabel="Assignments"
+          strokeColor="#0f172a"
+          fillColor="#cbd5e1"
+        />
+
+        <BarChartCard
+          title="Maintenance Status Overview"
+          subtitle="Current and recent repair volume by service state"
+          data={maintenanceStatusOverview}
+          dataKey="value"
+          xAxisKey="label"
+          colorKey="color"
+          valueLabel="Records"
+        />
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,0.95fr)]">
         <PageSection
           title="Recent Assignments"
-          subtitle="Latest changes to asset ownership and issue status"
+          subtitle="Latest employee allocations and device issue activity"
         >
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200 text-sm">
-              <thead className="text-left text-slate-500">
+          <div className="table-scroll">
+            <table className="table-base">
+              <thead className="table-head">
                 <tr>
-                  <th className="pb-3 font-medium">Asset Tag</th>
-                  <th className="pb-3 font-medium">Device</th>
-                  <th className="pb-3 font-medium">Assigned To</th>
-                  <th className="pb-3 font-medium">Department</th>
-                  <th className="pb-3 font-medium">Date</th>
-                  <th className="pb-3 font-medium">Status</th>
+                  <th className="table-head-cell">Asset Tag</th>
+                  <th className="table-head-cell">Device</th>
+                  <th className="table-head-cell">Assigned To</th>
+                  <th className="table-head-cell">Department</th>
+                  <th className="table-head-cell">Date</th>
+                  <th className="table-head-cell">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="table-body">
                 {recentAssignments.map((assignment) => (
-                  <tr key={`${assignment.assetTag}-${assignment.date}`}>
-                    <td className="py-4 font-medium text-slate-900">{assignment.assetTag}</td>
-                    <td className="py-4 text-slate-600">{assignment.device}</td>
-                    <td className="py-4 text-slate-600">{assignment.assignedTo}</td>
-                    <td className="py-4 text-slate-600">{assignment.department}</td>
-                    <td className="py-4 text-slate-600">{assignment.date}</td>
-                    <td className="py-4">
+                  <tr className="table-row" key={assignment.id}>
+                    <td className="table-cell">
+                      <Link className="interactive-cell" to={`/assets/${assignment.assetTag}`}>
+                        {assignment.assetTag}
+                      </Link>
+                    </td>
+                    <td className="table-cell">{assignment.device}</td>
+                    <td className="table-cell">{assignment.employee}</td>
+                    <td className="table-cell">{assignment.department}</td>
+                    <td className="table-cell">{assignment.assignedDate}</td>
+                    <td className="table-cell">
                       <StatusBadge value={assignment.status} />
                     </td>
                   </tr>
@@ -247,24 +271,21 @@ export function DashboardPage() {
 
         <PageSection
           title="Maintenance Alerts"
-          subtitle="Devices currently in service or waiting for repair work"
+          subtitle="Devices needing repair attention or vendor follow-up"
         >
           <div className="space-y-3">
-            {maintenanceAlerts.map((item) => (
-              <div
-                className="rounded-xl border border-slate-200 px-4 py-4"
-                key={`${item.assetTag}-${item.issue}`}
-              >
+            {maintenanceAlerts.map((record) => (
+              <div className="rounded-2xl border border-slate-200 px-4 py-4" key={record.id}>
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="font-medium text-slate-900">{item.assetTag}</p>
-                    <p className="mt-1 text-sm text-slate-600">{item.issue}</p>
+                    <p className="font-medium text-slate-900">{record.assetTag}</p>
+                    <p className="mt-1 text-sm text-slate-600">{record.issue}</p>
                   </div>
-                  <StatusBadge value={item.repairStatus} />
+                  <StatusBadge value={record.status} />
                 </div>
-                <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
-                  <span>{item.vendor}</span>
-                  <span>ETA {item.eta}</span>
+                <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm leading-6 text-slate-500">
+                  <span>{record.vendor}</span>
+                  <span>ETA {record.eta}</span>
                 </div>
               </div>
             ))}
@@ -275,20 +296,20 @@ export function DashboardPage() {
       <div className="grid gap-6 xl:grid-cols-2">
         <PageSection
           title="Warranty Expiring Soon"
-          subtitle="Assets requiring renewal review in the upcoming cycle"
+          subtitle="Assets approaching renewal or coverage review"
         >
           <div className="space-y-3">
-            {warrantyExpiringSoon.map((asset) => (
+            {expiringWarrantyItems.map((item: WarrantyItem) => (
               <div
-                className="flex flex-col gap-2 rounded-xl border border-slate-200 px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
-                key={asset.assetTag}
+                className="flex flex-col gap-2 rounded-2xl border border-slate-200 px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
+                key={item.id}
               >
                 <div>
-                  <p className="font-medium text-slate-900">{asset.assetTag}</p>
-                  <p className="mt-1 text-sm text-slate-600">{asset.model}</p>
-                  <p className="mt-1 text-sm text-slate-500">{asset.assignedUser}</p>
+                  <p className="font-medium text-slate-900">{item.assetTag}</p>
+                  <p className="mt-1 text-sm text-slate-600">{item.model}</p>
+                  <p className="mt-1 text-sm text-slate-500">{item.owner}</p>
                 </div>
-                <p className="text-sm font-medium text-slate-700">{asset.warrantyExpiry}</p>
+                <p className="text-sm font-medium text-slate-700">{item.expiryDate}</p>
               </div>
             ))}
           </div>
@@ -296,18 +317,16 @@ export function DashboardPage() {
 
         <PageSection
           title="Recent Requests"
-          subtitle="Current intake across replacement, issue, and accessory requests"
+          subtitle="Latest employee requests across hardware and support workflows"
         >
           <div className="space-y-3">
             {recentRequests.map((request) => (
-              <div
-                className="rounded-xl border border-slate-200 px-4 py-4"
-                key={`${request.type}-${request.requester}`}
-              >
+              <div className="rounded-2xl border border-slate-200 px-4 py-4" key={request.id}>
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="font-medium text-slate-900">{request.type}</p>
-                    <p className="mt-1 text-sm text-slate-500">{request.requester}</p>
+                    <p className="font-medium text-slate-900">{request.requestId}</p>
+                    <p className="mt-1 text-sm text-slate-600">{request.type}</p>
+                    <p className="mt-1 text-sm text-slate-500">{request.employee}</p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <StatusBadge value={request.priority} />

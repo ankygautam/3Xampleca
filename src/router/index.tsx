@@ -1,3 +1,4 @@
+import { FileSearch } from "lucide-react";
 import {
   Link,
   Navigate,
@@ -7,6 +8,8 @@ import {
   useRouteError,
 } from "react-router-dom";
 import { AppLayout } from "../components/layout/AppLayout";
+import { EmptyState } from "../components/ui/EmptyState";
+import { routeMetadata } from "../lib/utils";
 import { AssetDetailPage } from "../pages/AssetDetailPage";
 import { AssetsPage } from "../pages/AssetsPage";
 import { AssignmentsPage } from "../pages/AssignmentsPage";
@@ -26,21 +29,41 @@ function RouteErrorBoundary() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
-      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-panel">
-        <p className="text-sm font-medium text-slate-500">Page unavailable</p>
-        <h1 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">
-          We couldn&apos;t load that route
-        </h1>
-        <p className="mt-3 text-sm leading-6 text-slate-600">{message}</p>
-        <div className="mt-6">
+      <div className="w-full max-w-2xl">
+        <EmptyState
+          action={
+            <Link
+              className="button-primary"
+              to="/dashboard"
+            >
+              Go to dashboard
+            </Link>
+          }
+          description={message}
+          icon={FileSearch}
+          title="We couldn&apos;t load that route"
+        />
+      </div>
+    </div>
+  );
+}
+
+function NotFoundPage() {
+  return (
+    <div className="py-6">
+      <EmptyState
+        action={
           <Link
-            className="inline-flex items-center rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
+            className="button-primary"
             to="/dashboard"
           >
-            Go to dashboard
+            Return to dashboard
           </Link>
-        </div>
-      </div>
+        }
+        description="Check the address or return to the main workspace to continue."
+        icon={FileSearch}
+        title="This page isn&apos;t available"
+      />
     </div>
   );
 }
@@ -59,52 +82,57 @@ const router = createHashRouter(
         {
           path: "dashboard",
           element: <DashboardPage />,
-          handle: { title: "Dashboard" },
+          handle: routeMetadata.dashboard,
         },
         {
           path: "assets",
           element: <AssetsPage />,
-          handle: { title: "Assets" },
+          handle: routeMetadata.assets,
         },
         {
           path: "assets/:id",
           element: <AssetDetailPage />,
-          handle: { title: "Asset Detail" },
+          handle: routeMetadata.assetDetail,
         },
         {
           path: "employees",
           element: <EmployeesPage />,
-          handle: { title: "Employees" },
+          handle: routeMetadata.employees,
         },
         {
           path: "assignments",
           element: <AssignmentsPage />,
-          handle: { title: "Assignments" },
+          handle: routeMetadata.assignments,
         },
         {
           path: "maintenance",
           element: <MaintenancePage />,
-          handle: { title: "Maintenance" },
+          handle: routeMetadata.maintenance,
         },
         {
           path: "requests",
           element: <RequestsPage />,
-          handle: { title: "Requests" },
+          handle: routeMetadata.requests,
         },
         {
           path: "vendors",
           element: <VendorsPage />,
-          handle: { title: "Vendors" },
+          handle: routeMetadata.vendors,
         },
         {
           path: "reports",
           element: <ReportsPage />,
-          handle: { title: "Reports" },
+          handle: routeMetadata.reports,
         },
         {
           path: "settings",
           element: <SettingsPage />,
-          handle: { title: "Settings" },
+          handle: routeMetadata.settings,
+        },
+        {
+          path: "*",
+          element: <NotFoundPage />,
+          handle: routeMetadata.notFound,
         },
       ],
     },

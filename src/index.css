@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes toast-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
 @layer base {
   :root {
     color-scheme: light;
@@ -33,6 +45,9 @@
 
   body {
     @apply m-0 min-w-[320px] bg-canvas text-slate-900;
+    background-image:
+      radial-gradient(circle at top, rgba(255, 255, 255, 0.9), transparent 34%),
+      linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
   }
 
   a {
@@ -48,6 +63,10 @@
 
   button {
     @apply text-inherit;
+  }
+
+  ::selection {
+    @apply bg-slate-900 text-white;
   }
 
   * {
@@ -78,6 +97,46 @@
 }
 
 @layer components {
+  .page-stack {
+    @apply space-y-8;
+  }
+
+  .page-header {
+    @apply flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between;
+  }
+
+  .page-copy {
+    @apply min-w-0;
+  }
+
+  .page-title {
+    @apply text-[1.625rem] font-semibold tracking-[-0.03em] text-slate-950;
+  }
+
+  .page-subtitle {
+    @apply mt-1.5 max-w-3xl text-sm leading-6 text-slate-500;
+  }
+
+  .page-actions {
+    @apply flex flex-wrap items-center gap-3;
+  }
+
+  .button-primary {
+    @apply inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-950 bg-slate-950 px-4 text-sm font-medium text-white shadow-sm transition-all duration-150 hover:border-slate-800 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-200;
+  }
+
+  .button-secondary {
+    @apply inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm transition-all duration-150 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-100;
+  }
+
+  .button-ghost {
+    @apply inline-flex h-10 items-center justify-center gap-2 rounded-xl px-3 text-sm font-medium text-slate-600 transition-colors duration-150 hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-100;
+  }
+
+  .button-icon {
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors duration-150 hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-100;
+  }
+
   .app-shell {
     @apply flex min-h-screen flex-col bg-canvas lg:grid lg:grid-cols-[280px_minmax(0,1fr)];
   }
@@ -99,6 +158,114 @@
   }
 
   .surface-card {
-    @apply rounded-xl2 border border-line bg-white shadow-panel;
+    @apply rounded-[22px] border border-slate-200/90 bg-white shadow-[0_18px_50px_-30px_rgba(15,23,42,0.18)];
+  }
+
+  .section-card {
+    @apply surface-card overflow-hidden;
+  }
+
+  .toolbar-row {
+    @apply flex flex-col gap-3 border-b border-slate-200/90 pb-5 lg:flex-row lg:items-center lg:justify-between;
+  }
+
+  .toolbar-group {
+    @apply flex flex-1 flex-col gap-3 md:flex-row;
+  }
+
+  .toolbar-search {
+    @apply relative min-w-0 flex-1;
+  }
+
+  .toolbar-input {
+    @apply h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 pl-10 text-sm text-slate-900 shadow-sm outline-none transition-all duration-150 placeholder:text-slate-400 focus:border-slate-300 focus:bg-white focus:ring-4 focus:ring-slate-100;
+  }
+
+  .toolbar-select {
+    @apply h-11 w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 pr-10 text-sm text-slate-700 shadow-sm outline-none transition-all duration-150 hover:bg-slate-50 focus:border-slate-300 focus:ring-4 focus:ring-slate-100;
+  }
+
+  .section-meta {
+    @apply flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between;
+  }
+
+  .section-count {
+    @apply text-sm text-slate-500;
+  }
+
+  .filter-reset {
+    @apply text-sm font-medium text-slate-600 transition-colors duration-150 hover:text-slate-900;
+  }
+
+  .table-shell {
+    @apply mt-6 overflow-hidden rounded-[20px] border border-slate-200 bg-white shadow-[0_16px_40px_-34px_rgba(15,23,42,0.28)];
+  }
+
+  .table-scroll {
+    @apply overflow-x-auto;
+  }
+
+  .table-base {
+    @apply min-w-full divide-y divide-slate-200 text-sm;
+  }
+
+  .table-head {
+    @apply bg-slate-50/90;
+  }
+
+  .table-head-cell {
+    @apply px-5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500;
+  }
+
+  .table-body {
+    @apply divide-y divide-slate-100 bg-white;
+  }
+
+  .table-row {
+    @apply transition-colors duration-150 hover:bg-slate-50/80;
+  }
+
+  .table-cell {
+    @apply px-5 py-4 align-middle text-sm text-slate-600;
+  }
+
+  .table-cell-primary {
+    @apply font-medium text-slate-900;
+  }
+
+  .table-cell-secondary {
+    @apply mt-1 text-xs text-slate-500;
+  }
+
+  .interactive-cell {
+    @apply font-medium text-slate-900 transition-colors duration-150 hover:text-slate-700;
+  }
+
+  .field-label {
+    @apply flex items-center gap-1 text-sm font-medium text-slate-700;
+  }
+
+  .field-help {
+    @apply mt-2 text-xs leading-5 text-slate-500;
+  }
+
+  .field-input {
+    @apply mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-slate-900 shadow-sm outline-none transition-all duration-150 placeholder:text-slate-400 focus:border-slate-300 focus:ring-4 focus:ring-slate-100;
+  }
+
+  .field-select {
+    @apply mt-2 h-11 w-full appearance-none rounded-xl border border-slate-200 bg-white px-3.5 pr-10 text-sm text-slate-900 shadow-sm outline-none transition-all duration-150 focus:border-slate-300 focus:ring-4 focus:ring-slate-100;
+  }
+
+  .field-textarea {
+    @apply mt-2 block min-h-[120px] w-full resize-none rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-900 shadow-sm outline-none transition-all duration-150 placeholder:text-slate-400 focus:border-slate-300 focus:ring-4 focus:ring-slate-100;
+  }
+
+  .empty-state-card {
+    @apply rounded-[20px] border border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center;
+  }
+
+  .toast-enter {
+    animation: toast-enter 180ms ease-out;
   }
 }

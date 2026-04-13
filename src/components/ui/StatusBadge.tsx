@@ -28,6 +28,7 @@ export type StatusBadgeValue =
   | "Resolved"
   | "Rejected"
   | "Due Soon"
+  | "Renewal Due"
   | "Overdue"
   | "Pending"
   | "In Repair"
@@ -36,7 +37,9 @@ export type StatusBadgeValue =
   | "High"
   | "Medium"
   | "Low"
-  | "Returned";
+  | "Returned"
+  | "Preferred"
+  | "Limited";
 
 const badgeStyles: Record<StatusBadgeValue, string> = {
   Active: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
@@ -52,6 +55,7 @@ const badgeStyles: Record<StatusBadgeValue, string> = {
   Resolved: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
   Rejected: "bg-rose-50 text-rose-700 ring-rose-600/20",
   "Due Soon": "bg-amber-50 text-amber-700 ring-amber-600/20",
+  "Renewal Due": "bg-amber-50 text-amber-700 ring-amber-600/20",
   Overdue: "bg-rose-50 text-rose-700 ring-rose-600/20",
   Pending: "bg-slate-100 text-slate-700 ring-slate-500/20",
   "In Repair": "bg-blue-50 text-blue-700 ring-blue-600/20",
@@ -70,6 +74,8 @@ const badgeStyles: Record<StatusBadgeValue, string> = {
   "Renewal Pending": "bg-amber-50 text-amber-700 ring-amber-600/20",
   Expired: "bg-rose-50 text-rose-700 ring-rose-600/20",
   Returned: "bg-slate-100 text-slate-700 ring-slate-500/20",
+  Preferred: "bg-sky-50 text-sky-700 ring-sky-600/20",
+  Limited: "bg-slate-100 text-slate-700 ring-slate-500/20",
 };
 
 interface StatusBadgeProps {
@@ -81,7 +87,7 @@ export function StatusBadge({ value, className }: StatusBadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset",
+        "inline-flex min-h-7 items-center rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-[0.02em] ring-1 ring-inset",
         badgeStyles[value],
         className,
       )}

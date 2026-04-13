@@ -1,28 +1,28 @@
-# 3xampleca
+# 3Xampleca
 
-3xampleca is a frontend-first internal asset management dashboard built with React, TypeScript, Vite, Tailwind CSS, React Router, and Lucide React.
+3Xampleca is a portfolio-ready frontend prototype for an internal IT asset operations platform. It is designed to showcase asset lifecycle visibility, assignment tracking, maintenance operations, vendor oversight, service request management, and reporting in a polished enterprise interface.
 
-It is designed as a clean enterprise interface for tracking devices, assignments, employees, maintenance, vendors, requests, reports, and settings without backend integration yet.
+## Product Overview
 
-## Current Scope
+This project presents the kind of internal system an IT operations or workplace technology team could use to manage company devices across procurement, ownership, repair, warranty review, and operational reporting.
 
-This project currently includes:
+The current version is frontend-only and runs entirely on realistic mock data. It focuses on product structure, dashboard quality, reusable UI patterns, and presentation-ready UX rather than backend integration.
 
-- Shared application shell with a dark sidebar and light content area
-- Routed dashboard structure with React Router
-- Reusable UI primitives for cards, badges, and section containers
-- Realistic mock data for assets, employees, requests, assignments, maintenance, and vendors
-- Polished placeholder pages for:
-  - Dashboard
-  - Assets
-  - Asset Detail
-  - Employees
-  - Assignments
-  - Maintenance
-  - Requests
-  - Vendors
-  - Reports
-  - Settings
+## Key Features
+
+- Enterprise app shell with a dark operations sidebar and light content workspace
+- Dashboard with operational metrics, charts, recent assignments, maintenance alerts, warranty visibility, and request intake
+- Asset inventory screen with search, filtering, sorting, and add-asset modal flow
+- Asset detail view with lifecycle overview, assignment context, maintenance history, notes, and compliance summary
+- Employee directory focused on device ownership and support visibility
+- Assignment management for active allocations, returns, and assignment history
+- Maintenance operations view for repair queue tracking, vendor handling, and service history
+- Requests workspace for hardware, software, and support intake
+- Vendor management for suppliers, support partners, and contract review
+- Reporting screen with analytics visuals for category distribution, repair volume, assignment trends, and warranty outlook
+- Settings and administration surface for organization defaults, workflow rules, notifications, and role profiles
+- Local toast notifications and modal workflows for realistic UI behavior
+- Route-aware breadcrumbs, polished empty states, not found handling, and portfolio-friendly mock data
 
 ## Tech Stack
 
@@ -32,104 +32,135 @@ This project currently includes:
 - Tailwind CSS
 - React Router
 - Lucide React
+- Recharts
 
 ## Project Structure
 
 ```text
 src/
   components/
+    charts/
     layout/
     ui/
   data/
+  hooks/
   lib/
   pages/
   router/
   types/
+public/
 ```
 
-## Getting Started
+## Local Setup
 
-Install dependencies:
+1. Install dependencies
 
 ```bash
 npm install
 ```
 
-Start the development server:
+2. Start the development server
 
 ```bash
 npm run dev
 ```
 
-Build for production:
+3. Build the project
 
 ```bash
 npm run build
 ```
 
-Preview the production build:
+4. Preview the production build
 
 ```bash
 npm run preview
 ```
 
-## Current UI Areas
+## Available Scripts
 
-### Dashboard
+- `npm run dev` starts the Vite development server
+- `npm run typecheck` runs the TypeScript project build
+- `npm run build` creates the production build
+- `npm run preview` serves the production build locally
+- `npm run lint` runs ESLint
+- `npm run check` runs linting and a production build together
+- `npm run deploy` pushes the built `dist` output to the `gh-pages` branch using the current subtree workflow
 
-- Summary metrics
-- Recent assignments
-- Maintenance alerts
-- Warranty review
-- Recent requests
+## Deployment Notes
 
-### Assets
+### GitHub Pages
 
-- Inventory header and actions
-- Search and filter placeholders
-- Asset table
-- Inventory notes and health summary
+- The app uses a hash router, which avoids client-side refresh issues on static hosting
+- The default Vite base path is configured for the `3Xampleca` GitHub Pages deployment
+- The expected GitHub Pages URL is:
 
-### Asset Detail
+```text
+https://ankygautam.github.io/3Xampleca/
+```
 
-- Device overview
-- Assignment details
-- Maintenance history
-- Notes
-- Activity timeline
-- Security and compliance summary
+### Vercel
 
-### Employees
+- The current app does not require environment variables
+- For a root-path Vercel deployment, set:
 
-- Employee directory
-- Device ownership visibility
-- Department distribution
+```text
+VITE_BASE_PATH=/
+```
 
-### Assignments
+- Because the app uses hash routing, no custom rewrite rules are required for the current prototype
 
-- Active assignments
-- Assignment history
-- Awaiting-assignment panel
+## Screenshots
 
-### Maintenance
+Add screenshots here before publishing the project publicly:
 
-- Repair queue
-- Repair history
-- Vendor performance summary
+- `docs/screenshots/dashboard-overview.png`
+- `docs/screenshots/assets-inventory.png`
+- `docs/screenshots/maintenance-operations.png`
+- `docs/screenshots/reporting-analytics.png`
 
-## Notes
+Suggested README image section:
 
-- This is a frontend scaffold only.
-- No backend, API integration, authentication, or persistence is included yet.
-- All current data is mocked for layout and workflow design.
+```md
+![Dashboard overview](docs/screenshots/dashboard-overview.png)
+![Assets inventory](docs/screenshots/assets-inventory.png)
+```
 
-## Next Suggested Steps
+## Portfolio Positioning
 
-- Connect the app to a real backend or mock API layer
-- Add shared data tables and filters as reusable components
-- Add form flows for create/edit actions
-- Add role-aware permissions and settings workflows
-- Add charts and exports on the Reports page
+This project is intentionally framed as an internal asset operations platform rather than a marketing demo. The experience is built around practical operational workflows:
+
+- asset lifecycle visibility
+- assignment tracking
+- maintenance operations
+- vendor oversight
+- reporting and warranty visibility
+
+It is suitable for portfolio review when discussing:
+
+- frontend architecture for internal tools
+- reusable design systems
+- dashboard UX
+- table-heavy product interfaces
+- modal workflows
+- mock-data driven prototyping
+- enterprise UI polish
+
+## Future Improvements
+
+- Connect the prototype to a real backend or API layer
+- Add persistent CRUD flows for assets, assignments, maintenance records, requests, and vendors
+- Add employee and request detail routes
+- Support CSV or PDF export flows
+- Add role-aware permissions and audit logging
+- Add dark-mode aware chart theming if product requirements call for it
+- Split analytics code for smaller production bundles
+
+## Current Notes
+
+- This is a mock-data environment with no authentication or persistence
+- Modal actions update local page state only
+- Some secondary actions intentionally surface informational toasts because the backend workflows are not wired yet
 
 ## Author
 

@@ -1,20 +1,24 @@
 {
   "name": "3xampleca",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "Portfolio-ready internal asset operations frontend for lifecycle visibility, assignment tracking, maintenance operations, vendor oversight, and reporting.",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "typecheck": "tsc -b",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "check": "npm run lint && npm run build",
     "deploy": "npm run build && git subtree push --prefix dist origin gh-pages"
   },
   "dependencies": {
     "lucide-react": "^1.8.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-router-dom": "^7.14.0"
+    "react-router-dom": "^7.14.0",
+    "recharts": "^3.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

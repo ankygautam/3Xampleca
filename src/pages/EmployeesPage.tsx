@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import {
   ChevronDown,
   LaptopMinimal,
@@ -7,132 +8,161 @@ import {
   Users,
   Workflow,
 } from "lucide-react";
+import { assignments, employees } from "../data/mockData";
+import { useToast } from "../hooks/useToast";
 import { PageSection } from "../components/ui/PageSection";
 import { StatCard } from "../components/ui/StatCard";
 import { StatusBadge } from "../components/ui/StatusBadge";
+import type { Employee, EmployeeStatus } from "../types";
 
-type EmployeeDirectoryStatus = "Active" | "Remote" | "On Leave" | "New Hire";
-
-interface EmployeeRow {
-  id: string;
-  name: string;
-  department: string;
-  location: string;
-  email: string;
-  assignedDevices: string;
-  status: EmployeeDirectoryStatus;
+function ToolbarSelect({
+  value,
+  onChange,
+  options,
+  ariaLabel,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  options: string[];
+  ariaLabel: string;
+}) {
+  return (
+    <div className="relative md:min-w-[170px]">
+      <select
+        aria-label={ariaLabel}
+        className="toolbar-select"
+        onChange={(event) => onChange(event.target.value)}
+        value={value}
+      >
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+    </div>
+  );
 }
 
 const summaryCards = [
   {
     title: "Total Employees",
-    value: "284",
     subtitle: "Tracked in asset directory",
     helperText: "Across all supported offices",
     icon: Users,
   },
   {
     title: "Active Assignments",
-    value: "612",
     subtitle: "Devices currently in use",
     helperText: "Includes laptops, phones, and accessories",
     icon: Workflow,
   },
   {
     title: "Remote Staff",
-    value: "76",
     subtitle: "Working outside office locations",
     helperText: "Priority for shipping and swap logistics",
     icon: LaptopMinimal,
   },
   {
     title: "New Hires This Month",
-    value: "11",
     subtitle: "Pending onboarding readiness",
     helperText: "Provisioning tracked by IT operations",
     icon: UserRoundPlus,
   },
 ] as const;
 
-const employeeRows: EmployeeRow[] = [
-  {
-    id: "emp-001",
-    name: "Liam Brooks",
-    department: "Operations",
-    location: "Calgary",
-    email: "liam.brooks@company.com",
-    assignedDevices: "3 devices",
-    status: "Active",
-  },
-  {
-    id: "emp-002",
-    name: "Anika Sharma",
-    department: "Finance",
-    location: "Calgary",
-    email: "anika.sharma@company.com",
-    assignedDevices: "2 devices",
-    status: "Active",
-  },
-  {
-    id: "emp-003",
-    name: "Jordan Patel",
-    department: "Legal",
-    location: "Toronto",
-    email: "jordan.patel@company.com",
-    assignedDevices: "2 devices",
-    status: "Remote",
-  },
-  {
-    id: "emp-004",
-    name: "Sofia Martinez",
-    department: "People",
-    location: "Vancouver",
-    email: "sofia.martinez@company.com",
-    assignedDevices: "1 device",
-    status: "On Leave",
-  },
-  {
-    id: "emp-005",
-    name: "Ethan Walker",
-    department: "Design",
-    location: "Montreal",
-    email: "ethan.walker@company.com",
-    assignedDevices: "4 devices",
-    status: "Remote",
-  },
-  {
-    id: "emp-006",
-    name: "Noah Kim",
-    department: "Revenue",
-    location: "Toronto",
-    email: "noah.kim@company.com",
-    assignedDevices: "2 devices",
-    status: "New Hire",
-  },
-];
-
-const departmentDistribution = [
-  { department: "Operations", employees: "64 employees", devices: "138 devices" },
-  { department: "Finance", employees: "28 employees", devices: "54 devices" },
-  { department: "People", employees: "19 employees", devices: "31 devices" },
-  { department: "Legal", employees: "14 employees", devices: "27 devices" },
-];
-
 export function EmployeesPage() {
+  const { pushToast } = useToast();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState("All departments");
+  const [selectedStatus, setSelectedStatus] = useState("All statuses");
+
+  const summaryValues = {
+    "Total Employees": employees.length,
+    "Active Assignments": assignments.filter((item) => item.status === "Active").length,
+    "Remote Staff": employees.filter((item) => item.status === "Remote").length,
+    "New Hires This Month": employees.filter((item) => item.status === "New Hire").length,
+  };
+
+  const departmentOptions = useMemo(
+    () => ["All departments", ...new Set(employees.map((employee) => employee.department))],
+    [],
+  );
+  const statusOptions = useMemo(
+    () => ["All statuses", ...new Set(employees.map((employee) => employee.status))],
+    [],
+  );
+
+  const filteredEmployees = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+
+    return employees.filter((employee) => {
+      const matchesSearch =
+        normalizedSearch.length === 0 ||
+        [employee.name, employee.email, employee.department, employee.location]
+          .join(" ")
+          .toLowerCase()
+          .includes(normalizedSearch);
+
+      const matchesDepartment =
+        selectedDepartment === "All departments" ||
+        employee.department === selectedDepartment;
+      const matchesStatus =
+        selectedStatus === "All statuses" || employee.status === selectedStatus;
+
+      return matchesSearch && matchesDepartment && matchesStatus;
+    });
+  }, [searchTerm, selectedDepartment, selectedStatus]);
+
+  const departmentDistribution = Array.from(
+    filteredEmployees.reduce((map, employee) => {
+      const current = map.get(employee.department) ?? { employees: 0, devices: 0 };
+      map.set(employee.department, {
+        employees: current.employees + 1,
+        devices: current.devices + employee.assignedDevices,
+      });
+      return map;
+    }, new Map<string, { employees: number; devices: number }>()),
+  ).map(([department, stats]) => ({
+    department,
+    employees: `${stats.employees} employees`,
+    devices: `${stats.devices} devices`,
+  }));
+
+  const hasActiveFilters =
+    searchTerm.length > 0 ||
+    selectedDepartment !== "All departments" ||
+    selectedStatus !== "All statuses";
+
+  const resetFilters = () => {
+    setSearchTerm("");
+    setSelectedDepartment("All departments");
+    setSelectedStatus("All statuses");
+  };
+
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-        <div>
-          <h2 className="text-xl font-semibold tracking-tight text-slate-950">
+    <div className="page-stack">
+      <div className="page-header">
+        <div className="page-copy">
+          <h2 className="page-title">
             Employee directory
           </h2>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="page-subtitle">
             Manage staff records, device ownership, and support coverage by team.
           </p>
         </div>
 
         <button
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
+          className="button-primary"
+          onClick={() =>
+            pushToast({
+              type: "info",
+              title: "Employee creation preview",
+              message:
+                "Employee onboarding and directory sync can be connected to HRIS or identity systems in the production version.",
+            })
+          }
           type="button"
         >
           <Plus className="h-4 w-4" />
@@ -145,7 +175,7 @@ export function EmployeesPage() {
           <StatCard
             key={card.title}
             title={card.title}
-            value={card.value}
+            value={String(summaryValues[card.title])}
             subtitle={card.subtitle}
             helperText={card.helperText}
             icon={card.icon}
@@ -157,77 +187,111 @@ export function EmployeesPage() {
         title="Directory"
         subtitle="Current employee records and assigned device visibility"
       >
-        <div className="flex flex-col gap-3 border-b border-slate-200 pb-5 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-1 flex-col gap-3 md:flex-row">
-            <label className="relative min-w-0 flex-1">
+        <div className="toolbar-row">
+          <div className="toolbar-group">
+            <label className="toolbar-search">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-4 text-sm text-slate-900 outline-none transition focus:border-slate-300 focus:bg-white"
-                placeholder="Search by employee name or email"
+                className="toolbar-input"
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Search by employee name, email, department, or location"
                 type="text"
+                value={searchTerm}
               />
             </label>
 
-            <button
-              className="inline-flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-50 md:min-w-[170px]"
-              type="button"
-            >
-              <span>All departments</span>
-              <ChevronDown className="h-4 w-4 text-slate-400" />
-            </button>
+            <ToolbarSelect
+              ariaLabel="Filter employees by department"
+              onChange={setSelectedDepartment}
+              options={departmentOptions}
+              value={selectedDepartment}
+            />
 
-            <button
-              className="inline-flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 transition hover:bg-slate-50 md:min-w-[170px]"
-              type="button"
-            >
-              <span>All locations</span>
-              <ChevronDown className="h-4 w-4 text-slate-400" />
-            </button>
+            <ToolbarSelect
+              ariaLabel="Filter employees by status"
+              onChange={(value) => setSelectedStatus(value as EmployeeStatus | "All statuses")}
+              options={statusOptions}
+              value={selectedStatus}
+            />
           </div>
         </div>
 
-        <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200 text-sm">
-              <thead className="bg-slate-50">
-                <tr className="text-left text-slate-500">
-                  <th className="px-4 py-3.5 font-medium">Employee Name</th>
-                  <th className="px-4 py-3.5 font-medium">Department</th>
-                  <th className="px-4 py-3.5 font-medium">Location</th>
-                  <th className="px-4 py-3.5 font-medium">Email</th>
-                  <th className="px-4 py-3.5 font-medium">Assigned Devices</th>
-                  <th className="px-4 py-3.5 font-medium">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 bg-white">
-                {employeeRows.map((employee) => (
-                  <tr key={employee.id} className="transition-colors hover:bg-slate-50/80">
-                    <td className="px-4 py-4">
-                      <button
-                        className="font-medium text-slate-900 transition hover:text-slate-700"
-                        type="button"
-                      >
-                        {employee.name}
-                      </button>
-                    </td>
-                    <td className="px-4 py-4 text-slate-600">{employee.department}</td>
-                    <td className="px-4 py-4 text-slate-600">{employee.location}</td>
-                    <td className="px-4 py-4 text-slate-600">{employee.email}</td>
-                    <td className="px-4 py-4 text-slate-600">{employee.assignedDevices}</td>
-                    <td className="px-4 py-4">
-                      <StatusBadge value={employee.status} />
-                    </td>
+        <div className="section-meta">
+          <p className="section-count">
+            {filteredEmployees.length} employees in this view
+          </p>
+          {hasActiveFilters ? (
+            <button
+              className="filter-reset"
+              onClick={resetFilters}
+              type="button"
+            >
+              Reset filters
+            </button>
+          ) : null}
+        </div>
+
+        {filteredEmployees.length === 0 ? (
+          <div className="empty-state-card mt-6">
+            <p className="text-base font-medium text-slate-900">No employees matched these filters.</p>
+            <p className="mt-2 text-sm text-slate-500">
+              Try a broader search or clear the department and status filters.
+            </p>
+            <button
+              className="button-secondary mt-5"
+              onClick={resetFilters}
+              type="button"
+            >
+              Reset filters
+            </button>
+          </div>
+        ) : (
+          <div className="table-shell">
+            <div className="table-scroll">
+              <table className="table-base">
+                <thead className="table-head">
+                  <tr>
+                    <th className="table-head-cell">Employee Name</th>
+                    <th className="table-head-cell">Department</th>
+                    <th className="table-head-cell">Location</th>
+                    <th className="table-head-cell">Email</th>
+                    <th className="table-head-cell">Assigned Devices</th>
+                    <th className="table-head-cell">Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="table-body">
+                  {filteredEmployees.map((employee: Employee) => (
+                    <tr key={employee.id} className="table-row">
+                      <td className="table-cell">
+                        <button
+                          className="interactive-cell"
+                          onClick={() =>
+                            pushToast({
+                              type: "info",
+                              title: "Employee profile preview",
+                              message:
+                                "A dedicated employee detail route can be layered onto this directory in the next iteration.",
+                            })
+                          }
+                          type="button"
+                        >
+                          {employee.name}
+                        </button>
+                      </td>
+                      <td className="table-cell">{employee.department}</td>
+                      <td className="table-cell">{employee.location}</td>
+                      <td className="table-cell">{employee.email}</td>
+                      <td className="table-cell">{`${employee.assignedDevices} devices`}</td>
+                      <td className="table-cell">
+                        <StatusBadge value={employee.status} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-
-        <div className="mt-4 flex items-center justify-between text-sm text-slate-500">
-          <p>{employeeRows.length} employees in this view</p>
-          <p>Showing current directory records</p>
-        </div>
+        )}
       </PageSection>
 
       <PageSection
@@ -237,7 +301,7 @@ export function EmployeesPage() {
         <div className="grid gap-4 lg:grid-cols-2">
           {departmentDistribution.map((item) => (
             <div
-              className="rounded-xl border border-slate-200 px-4 py-4"
+              className="rounded-2xl border border-slate-200 px-4 py-4"
               key={item.department}
             >
               <div className="flex items-center justify-between gap-3">
