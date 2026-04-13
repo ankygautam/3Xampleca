@@ -137,9 +137,6 @@ const router = createHashRouter(
       ],
     },
   ],
-  {
-    basename: import.meta.env.BASE_URL,
-  },
 );
 
 export function AppRouter() {
