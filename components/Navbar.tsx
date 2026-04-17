@@ -6,7 +6,7 @@ import { useState } from "react";
 import { config } from "@/config";
 
 const navLinks = [
-  { label: "Projects", href: "/projects" },
+  { label: "Vision", href: "/vision" },
   { label: "About", href: "/about" },
   { label: "Token info", href: "/token-info" },
   { label: "X / Twitter", href: config.twitterUrl, external: true },

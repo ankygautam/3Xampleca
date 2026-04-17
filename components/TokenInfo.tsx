@@ -76,37 +76,36 @@ export function TokenInfo() {
 
   return (
     <section className="section-shell pt-16">
-      <div className="max-w-2xl">
-        <p className="eyebrow">Token info</p>
-        <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 dark:text-white">
-          Official addresses and support details
-        </h2>
-        <p className="mt-4 text-base leading-7 text-slate-600 dark:text-slate-300">
-          {config.contractAddressNote}
-        </p>
-      </div>
-
-      <div className="mt-8 space-y-4">
-        <CopyButton
-          label="Contract address (CA)"
-          onCopied={handleCopied}
-          value={config.contractAddress}
-        />
-
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/20 dark:text-rose-300">
-          Never trust copied addresses from comments or replies
+      <div className="space-y-6">
+        <div className="surface-card p-6 sm:p-8">
+          <p className="eyebrow">Official address</p>
+          <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300 sm:text-base">
+            {config.contractAddressNote}
+          </p>
+          <div className="mt-6">
+            <CopyButton
+              label="Contract address (CA)"
+              onCopied={handleCopied}
+              value={config.contractAddress}
+            />
+          </div>
+          <div className="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/20 dark:text-rose-300">
+            Always verify from this site. Never trust addresses from comments or replies.
+          </div>
         </div>
 
-        <CopyButton
-          label="Developer donation address"
-          onCopied={handleCopied}
-          value={config.donationAddress}
-        />
-
-        <div className="surface-card p-5">
-          <p className="text-sm leading-7 text-slate-600 dark:text-slate-300">
+        <div className="surface-card p-6 sm:p-8">
+          <p className="eyebrow">Support details</p>
+          <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300 sm:text-base">
             {config.donationAddressNote}
           </p>
+          <div className="mt-6">
+            <CopyButton
+              label="Developer donation address"
+              onCopied={handleCopied}
+              value={config.donationAddress}
+            />
+          </div>
         </div>
       </div>
 

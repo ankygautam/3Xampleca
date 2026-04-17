@@ -2,8 +2,6 @@ import { DisclaimerFooter } from "@/components/DisclaimerFooter";
 import { Navbar } from "@/components/Navbar";
 import { PageIntro } from "@/components/PageIntro";
 import { TokenInfo } from "@/components/TokenInfo";
-import { TextContentCard } from "@/components/TextContentCard";
-import { config } from "@/config";
 
 export default function TokenInfoPage() {
   return (
@@ -17,9 +15,6 @@ export default function TokenInfoPage() {
         />
       </section>
       <TokenInfo />
-      <section className="section-shell pt-16">
-        <TextContentCard title="Disclaimer" paragraphs={[config.disclaimer]} />
-      </section>
       <DisclaimerFooter />
     </main>
   );
