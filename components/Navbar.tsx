@@ -30,11 +30,11 @@ export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur dark:border-slate-800/80 dark:bg-slate-950/95">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/70 backdrop-blur-2xl">
       <div className="section-shell">
         <div className="flex min-h-16 items-center justify-between gap-4">
-          <Link href="/" className="flex items-center text-lg font-semibold tracking-tight">
-            <span className="text-brand-primary">3</span>
+          <Link href="/" className="flex items-center text-lg font-semibold tracking-tight text-white">
+            <span className="text-white">3</span>
             <span>xample</span>
           </Link>
 
@@ -43,7 +43,7 @@ export function Navbar() {
               link.external ? (
                 <a
                   key={link.label}
-                  className="nav-link"
+                  className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-slate-300 transition hover:bg-white/8 hover:text-white"
                   href={link.href}
                   rel="noreferrer"
                   target="_blank"
@@ -53,7 +53,11 @@ export function Navbar() {
               ) : (
                 <Link
                   key={link.label}
-                  className={`nav-link ${pathname === link.href ? "bg-brand-surface text-brand-primary dark:bg-slate-900 dark:text-brand-accent" : ""}`}
+                  className={`inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium transition ${
+                    pathname === link.href
+                      ? "bg-white/10 text-white"
+                      : "text-slate-300 hover:bg-white/8 hover:text-white"
+                  }`}
                   href={link.href}
                 >
                   {link.label}
@@ -61,7 +65,7 @@ export function Navbar() {
               ),
             )}
             <a
-              className="ml-2 inline-flex min-h-11 items-center rounded-xl bg-brand-primary px-4 text-sm font-medium text-white transition hover:bg-[#473fa2]"
+              className="ml-2 inline-flex min-h-11 items-center rounded-xl border border-white/10 bg-white px-4 text-sm font-medium text-black transition hover:bg-white/90"
               href={config.pumpFunUrl}
               rel="noreferrer"
               target="_blank"
@@ -73,7 +77,7 @@ export function Navbar() {
           <button
             aria-expanded={isOpen}
             aria-label="Toggle navigation"
-            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-slate-200 text-slate-700 transition hover:border-brand-primary hover:text-brand-primary sm:hidden dark:border-slate-800 dark:text-slate-200"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-white/10 text-slate-200 transition hover:border-white/30 hover:text-white sm:hidden"
             onClick={() => setIsOpen((value) => !value)}
             type="button"
           >
@@ -83,7 +87,7 @@ export function Navbar() {
       </div>
 
       <div
-        className={`overflow-hidden border-t border-slate-200 transition-[max-height,opacity] duration-200 sm:hidden dark:border-slate-800 ${
+        className={`overflow-hidden border-t border-white/10 transition-[max-height,opacity] duration-200 sm:hidden ${
           isOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
@@ -93,7 +97,7 @@ export function Navbar() {
               link.external ? (
                 <a
                   key={link.label}
-                  className="nav-link justify-start"
+                  className="inline-flex min-h-11 items-center justify-start rounded-lg px-3 text-sm font-medium text-slate-300 transition hover:bg-white/8 hover:text-white"
                   href={link.href}
                   rel="noreferrer"
                   target="_blank"
@@ -104,7 +108,11 @@ export function Navbar() {
               ) : (
                 <Link
                   key={link.label}
-                  className={`nav-link justify-start ${pathname === link.href ? "bg-brand-surface text-brand-primary dark:bg-slate-900 dark:text-brand-accent" : ""}`}
+                  className={`inline-flex min-h-11 items-center justify-start rounded-lg px-3 text-sm font-medium transition ${
+                    pathname === link.href
+                      ? "bg-white/10 text-white"
+                      : "text-slate-300 hover:bg-white/8 hover:text-white"
+                  }`}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
                 >
@@ -113,7 +121,7 @@ export function Navbar() {
               ),
             )}
             <a
-              className="button-primary w-full"
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-white/10 bg-white px-5 py-3 text-sm font-medium text-black transition hover:bg-white/90"
               href={config.pumpFunUrl}
               rel="noreferrer"
               target="_blank"
