@@ -24,15 +24,11 @@ export function PageShell({
   return (
     <main
       className={cn(
-        "relative min-h-screen overflow-hidden bg-[#040711] text-white",
+        "relative min-h-screen overflow-hidden bg-black text-white",
         className,
       )}
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.15),transparent_28%),radial-gradient(circle_at_top_right,rgba(139,92,246,0.14),transparent_24%),radial-gradient(circle_at_bottom,rgba(56,189,248,0.08),transparent_30%)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:72px_72px] opacity-20" />
-      <div className="absolute left-[-10rem] top-24 h-72 w-72 rounded-full bg-cyan-400/10 blur-[120px]" />
-      <div className="absolute right-[-8rem] top-40 h-80 w-80 rounded-full bg-violet-500/12 blur-[140px]" />
-      <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-sky-400/8 blur-[150px]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.1),transparent_24%),radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_20%),radial-gradient(circle_at_bottom,rgba(255,255,255,0.05),transparent_30%)]" />
 
       <div className="relative z-10">
         <Navbar />
