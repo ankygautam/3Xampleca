@@ -3,7 +3,7 @@ export const config = {
   streamSchedule: "Weekdays after 4:00 PM MST",
   liveAppCount: 3,
   contractAddress: "PASTE_CA_HERE",
-  donationAddress: "PASTE_DONATION_ADDRESS_HERE",
+  donationAddress: "DdDJEJ8FFU5SG3jCFkA4FrXgfTk7HKvr6Emtw5qLDXD",
   twitterUrl: "https://x.com/YOURHANDLE",
   pumpFunUrl: "https://pump.fun/YOURTOKEN",
   projectVision: [
