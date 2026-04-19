@@ -42,13 +42,13 @@ function AddressCard({
           <p className="text-base leading-8 text-slate-300">{description}</p>
         </div>
 
-        <div className="mt-auto flex items-start gap-3 rounded-[1.5rem] border border-cyan-300/15 bg-slate-950/60 p-4">
-          <code className="min-w-0 flex-1 break-all font-mono text-sm leading-7 text-cyan-100 sm:text-[0.95rem]">
+        <div className="mt-auto flex items-start gap-3 rounded-[1.5rem] border border-white/10 bg-black/45 p-4">
+          <code className="min-w-0 flex-1 break-all font-mono text-sm leading-7 text-slate-100 sm:text-[0.95rem]">
             {value}
           </code>
           <Button
             aria-label={`Copy ${title}`}
-            className={copied ? "border-cyan-300/40 bg-cyan-300/12 text-cyan-100" : ""}
+            className={copied ? "border-white/20 bg-white/10 text-white" : ""}
             onClick={handleCopy}
             size="icon"
             type="button"
@@ -65,7 +65,7 @@ function AddressCard({
 export default function TokenInfoPage() {
   return (
     <PageShell title="Token info">
-      <div className="grid gap-5 lg:grid-cols-2">
+      <div className="mx-auto grid max-w-5xl gap-5">
         <AddressCard
           delay={0.05}
           description={config.contractAddressNote}

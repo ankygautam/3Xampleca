@@ -17,6 +17,9 @@ export default function VisionPage() {
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-black text-white">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.1),transparent_24%),radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_20%),radial-gradient(circle_at_bottom,rgba(255,255,255,0.05),transparent_30%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:72px_72px] opacity-20" />
+      <div className="absolute left-[-8rem] top-20 h-72 w-72 rounded-full bg-white/10 blur-[130px]" />
+      <div className="absolute right-[-6rem] top-28 h-80 w-80 rounded-full bg-white/10 blur-[145px]" />
 
       <div className="relative z-10">
         <Navbar />
